@@ -23,8 +23,8 @@
 srcdir = .
 VPATH = .
 
-CC = cc
-INSTALL = /bin/install -c
+CC = gcc
+INSTALL = /usr/bin/install -c
 INSTALL_PROGRAM = $(INSTALL)
 INSTALL_DATA = $(INSTALL) -m 644
 MAKEINFO = makeinfo
@@ -34,7 +34,7 @@ MAKEINFO = makeinfo
 # -DHAVE_STRING_H	If you don't have ANSI C headers but have string.h.
 # -DHAVE_MEMORY_H	If you don't have ANSI C headers and have memory.h.
 # -DHAVE_STRERROR	If you have strerror function.
-DEFS =  -Dconst= -DHAVE_STRING_H=1 -DHAVE_STDLIB_H=1 -DHAVE_MEMORY_H=1 -DHAVE_ALLOCA_H=1
+DEFS =  -DSTDC_HEADERS=1 -DHAVE_STRING_H=1 -DHAVE_STDLIB_H=1 -DHAVE_MEMORY_H=1 -DHAVE_STRERROR=1 -DHAVE_ALLOCA_H=1
 
 CFLAGS = -g
 LDFLAGS = -g
@@ -45,7 +45,7 @@ LIBS =
 # the GNU alloca.o here.
 ALLOCA = 
 
-prefix = $(ENV_DIR)/tools
+prefix = /usr
 exec_prefix = $(prefix)
 
 # where the installed binary goes
@@ -55,22 +55,11 @@ bindir = $(exec_prefix)/bin
 datadir = $(prefix)/lib
 
 # where the info files go
-infodir = $(ENV_DIR)/doc/info
+infodir = $(prefix)/info
 
 # where manual pages go and what their extensions should be
 manext = 1
-mandir = $(ENV_DIR)/doc/man/man$(manext)
-
-# dman documentation parser
-.SUFFIXES : .dman
-.dman :
-	dman <$*.dman >$@
-	pman -t $@ >$*.ps
-default : all
-
-backup :
-	find . \( -name '*.o' -o -name '*%' -o -name 'bison++' -o -name '.tar.excludes' \) -print >.tar.excludes
-	tar cvfX - .tar.excludes . | compress -cv >../bison++.tar.Z
+mandir = $(prefix)/man/man$(manext)
 
 #### End of system configuration section. ####
 
