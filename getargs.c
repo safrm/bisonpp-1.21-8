@@ -154,7 +154,7 @@ getargs(argc, argv)
 
   if (optind == argc)
     {
-      fprintf(stderr, "%s: no grammar file given\n", program_name);
+      fprintf(stderr, "%s: no grammar file given. Try \"--help\"\n", program_name);
       exit(1);
     }
   if (optind < argc - 1)

@@ -32,3 +32,11 @@
 #include <strings.h>
 /* memory.h and strings.h conflict on some systems.  */
 #endif /* not STDC_HEADERS and not HAVE_STRING_H */
+
+#ifdef	WIN32
+	// include files simplified by Kohsuke (kk@kohsuke.org)
+	#include <string.h>
+	#include <memory.h>
+	#include <stdlib.h>
+	#include <windows.h>
+#endif

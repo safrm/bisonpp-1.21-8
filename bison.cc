@@ -18,37 +18,46 @@
 
 /* HEADER SECTION */
 #if defined( _MSDOS ) || defined(MSDOS) || defined(__MSDOS__) 
+#pragma message( "BISON++: __MSDOS_AND_ALIKE")
 #define __MSDOS_AND_ALIKE
 #endif
-#if defined(_WINDOWS) && defined(_MSC_VER)
+#if defined(_WIN32) && defined(_MSC_VER)
+#pragma message( "BISON++: __HAVE_NO_ALLOCA && __MSDOS_AND_ALIKE")
 #define __HAVE_NO_ALLOCA
 #define __MSDOS_AND_ALIKE
 #endif
 
 #ifndef alloca
 #if defined( __GNUC__)
+#pragma message( "BISON++: __GNUC__: define alloca __builtin_alloca")
 #define alloca __builtin_alloca
 
 #elif (!defined (__STDC__) && defined (sparc)) || defined (__sparc__) || defined (__sparc)  || defined (__sgi)
+#pragma message( "BISON++: !__STDC__ && sparc: alloca.h")
 #include <alloca.h>
 
 #elif defined (__MSDOS_AND_ALIKE)
+#pragma message( "BISON++: __MSDOS_AND_ALIKE: malloc.h")
 #include <malloc.h>
 #ifndef __TURBOC__
 /* MS C runtime lib */
+#pragma message( "BISON++: !__TURBOC__: define alloca _alloca")
 #define alloca _alloca
 #endif
 
 #elif defined(_AIX)
+#pragma message( "BISON++: _AIX: malloc.h")
 #include <malloc.h>
 #pragma alloca
 
 #elif defined(__hpux)
 #ifdef __cplusplus
+#pragma message( "BISON++: __cplusplus: extern C void *alloca")
 extern "C" {
 void *alloca (unsigned int);
 };
 #else /* not __cplusplus */
+#pragma message( "BISON++: !__cplusplus: void *alloca")
 void *alloca ();
 #endif /* not __cplusplus */
 
@@ -378,11 +387,12 @@ YYENDDECLARELABEL
 /* ALLOCA SIMULATION */
 /* __HAVE_NO_ALLOCA */
 #ifdef __HAVE_NO_ALLOCA
-int __alloca_free_ptr(char *ptr,char *ref)
+#pragma message( "BISON++: __HAVE_NO_ALLOCA definition")
+static int __alloca_free_ptr(char *ptr,char *ref)
 {if(ptr!=ref) free(ptr);
  return 0;}
 
-#define __ALLOCA_alloca(size) malloc(size)
+#define __ALLOCA_alloca(size) malloc(size) 
 #define __ALLOCA_free(ptr,ref) __alloca_free_ptr((char *)ptr,(char *)ref)
 
 #ifdef YY_@_LSP_NEEDED
@@ -398,6 +408,7 @@ int __alloca_free_ptr(char *ptr,char *ref)
 		   (num))
 #endif
 #else
+#pragma message( "BISON++: !__HAVE_NO_ALLOCA definition")
 #define __ALLOCA_return(num) return(num)
 #define __ALLOCA_alloca(size) alloca(size)
 #define __ALLOCA_free(ptr,ref) 

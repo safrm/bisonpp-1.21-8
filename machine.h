@@ -17,6 +17,8 @@ You should have received a copy of the GNU General Public License
 along with Bison; see the file COPYING.  If not, write to
 the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.  */
 
+#undef	MAXSHORT
+#undef	MINSHORT
 #ifdef	eta10
 #define	MAXSHORT	2147483647
 #define	MINSHORT	-2147483648

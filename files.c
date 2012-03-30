@@ -129,6 +129,25 @@ char *string2;
 }
 
 
+#ifdef	WIN32
+// used to load bison.cc/bison.h from the same directory as bison++.exe
+char* computeFileName( const char* specifiedName, const char* defaultFileName ) {
+  char* result;
+	if(specifiedName!=NULL) {
+		result=(char *)xmalloc(strlen(specifiedName)+1);
+		strcpy(result,specifiedName);
+	} else {
+		char bisonExeName[256];
+		GetModuleFileName(NULL,bisonExeName,sizeof(bisonExeName));
+		strcpy(strrchr(bisonExeName,'\\')+1,defaultFileName);
+		result=(char*)xmalloc(strlen(bisonExeName)+1);
+		strcpy(result,bisonExeName);
+	}
+	return result;
+}
+#endif
+
+
 /* JF this has been hacked to death.  Nowaday it sets up the file names for
    the output files, and opens the tmp files and the parser */
 void
@@ -142,6 +161,8 @@ openfiles()
 
 #ifdef VMS
   char *tmp_base = "sys$scratch:b_";
+#elif WIN32
+  char* tmp_base = "";
 #else
   char *tmp_base = "/tmp/b.";
 #endif
@@ -243,11 +264,16 @@ openfiles()
       }
     }
 #endif /* MSDOS */
+
+#ifdef	WIN32
+  parser_fname = computeFileName( filename, PFILE );
+#else
   {char *p=filename ? filename : PFILE;
    
   parser_fname=(char *)xmalloc(strlen(p)+1);
   strcpy(parser_fname,p);
   }
+#endif
   fparser = tryopen(parser_fname, "r");
 
   filename=hskelfile;
@@ -272,12 +298,16 @@ openfiles()
 
     }
 #endif /* MSDOS */
+#ifdef	WIN32
+  // modified for Win32. load files from the same directory as bison++
+  hskel_fname = computeFileName( filename, HFILE );
+#else
   {char *p=filename ? filename : HFILE;
    
   hskel_fname=(char *)xmalloc(strlen(p)+1);
   strcpy(hskel_fname,p);
   }
-
+#endif
   fhskel = tryopen(hskel_fname, "r");
 
   if (verboseflag)
@@ -317,7 +347,7 @@ openfiles()
       fdefines = tryopen(tmpdefsfile, "w+");
     }
 
-#ifndef _MSDOS
+#if !defined(_MSDOS) || !defined(WIN32)
   unlink(actfile);
   unlink(tmpattrsfile);
   unlink(tmptabfile);
@@ -505,7 +535,7 @@ int k;
   if (k==0) sys$exit(SS$_NORMAL);
   sys$exit(SS$_ABORT);
 #else
-#ifdef _MSDOS
+#if defined(_MSDOS) || defined(WIN32)
   if (actfile) unlink(actfile);
   if (tmpattrsfile) unlink(tmpattrsfile);
   if (tmptabfile) unlink(tmptabfile);
